@@ -46,7 +46,7 @@ main(){
 
     while read shell_file;do
         source $shell_file
-    done < <(find shell_dir -type f -name '*.sh')
+    done < <(find $shell_dir -type f -name '*.sh')
     rm -rf temp
     git_commit
 }
