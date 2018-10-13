@@ -1,2 +1,2 @@
-            FROM zhangguanzhang/alpine
-            COPY kube-controller-manager /
+        FROM zhangguanzhang/alpine
+        COPY kubernetes-server-linux-amd64.tar.gz /
