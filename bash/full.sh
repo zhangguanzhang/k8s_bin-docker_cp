@@ -35,7 +35,7 @@ full::sync(){
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
-        echo zhangguanzhang/$img_name:$1-full > tag/$tag
+        echo zhangguanzhang/$img_name:$1-full > $CUR_DIR/tag/$tag
     } || :
 }
 
@@ -55,14 +55,14 @@ single::sync(){
         mounter
         )
     for file in ${files[@]};do
-        [ "$( hub_tag_exist $1-$file )" == null ] && {
+        [[ "$( hub_tag_exist $1-$file )" == null && -f kubernetes/server/bin/$file ] && {
             cat>Dockerfile<<-EOF
             FROM zhangguanzhang/alpine
             COPY kubernetes/server/bin/$file /
 EOF
             docker build -t zhangguanzhang/$img_name:$1-$file .
             docker push zhangguanzhang/$img_name:$1-$file
-            echo zhangguanzhang/$img_name:$1-$file > tag/$1-$file
+            echo zhangguanzhang/$img_name:$1-$file > $CUR_DIR/tag/$1-$file
         } || :
     done
 }
@@ -89,7 +89,7 @@ kube::sync(){
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
-        echo zhangguanzhang/$img_name:$tag > tag/$tag
+        echo zhangguanzhang/$img_name:$tag > $CUR_DIR/tag/$tag
         rm -f $save_name && cp zhangguanzhang $save_name
     } || :
 }
@@ -113,7 +113,7 @@ base::sync(){
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
-        echo zhangguanzhang/$img_name:$tag > tag/$tag
+        echo zhangguanzhang/$img_name:$tag > $CUR_DIR/tag/$tag
         rm -f $save_name && cp zhangguanzhang $save_name
     } || :
 }
