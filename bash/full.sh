@@ -61,10 +61,11 @@ kube::sync(){
     [ "$( hub_tag_exist $tag )" == null ] && {
         
         sudo tar -zxvf /$save_name  --strip-components=3  kubernetes/server/bin/
+        ls -l 
         for file in ${files[@]};do
             [ -f $file ] && local_kube_file+=($file)
         done
-        tar zcvf $save_name "${local_kube_file[@]}"
+        sudo tar zcvf $save_name "${local_kube_file[@]}"
         rm -f $(ls -1I $save_name)
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
