@@ -119,7 +119,7 @@ main(){
         done
         sudo rm -rf $save_name /$save_name kubernetes/ 
 
-    done < $version_file
+    done < $CUR_DIR/$version_file
 
     cd $CUR_DIR
     rm -rf temp/*
