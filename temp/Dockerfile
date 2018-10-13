@@ -1,2 +1,2 @@
-            FROM zhangguanzhang/alpine
-            COPY kube-apiserver /
+        FROM zhangguanzhang/alpine
+        COPY kubernetes-server-linux-amd64.tar.gz /
