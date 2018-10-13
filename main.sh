@@ -1,5 +1,5 @@
 #!/bin/bash
-
+[ -n "$DEBUG" ] && set -x
 export CUR_DIR version_file MY_REPO img_name max_per url_format
 
 readonly CUR_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
