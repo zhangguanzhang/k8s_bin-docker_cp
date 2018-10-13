@@ -90,7 +90,7 @@ base::sync(){
         )
     [ "$( hub_tag_exist $tag )" == null ] && {
         sudo tar -zxvf /$save_name  --strip-components=3  $( sed 's#^#kubernetes/server/bin/#' <(xargs -n1<<<"${files[@]}") )
-        tar zcvf $save_name "${files[@]}"
+        sudo tar zcvf $save_name "${files[@]}"
         rm -f ${files[@]}
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
