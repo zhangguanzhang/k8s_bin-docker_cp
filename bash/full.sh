@@ -61,7 +61,6 @@ kube::sync(){
     [ "$( hub_tag_exist $tag )" == null ] && {
         
         sudo tar -zxvf /$save_name  --strip-components=3  kubernetes/server/bin/
-        ls -l 
         for file in ${files[@]};do
             [ -f $file ] && local_kube_file+=($file)
         done
@@ -109,6 +108,7 @@ main(){
 
     cd $CUR_DIR/temp
     while read version;do
+        grep -qP '\Q'"$version"'\E' synced && continue
         printf -v version_url_download "$url_format" $version
         save_name=${version_url_download##*/}
         sudo wget $version_url_download -O /$save_name &>/dev/null
@@ -117,13 +117,15 @@ main(){
             $run::sync $version
             [[ $(df -h| awk  '$NF=="/"{print +$5}') -ge "$max_per" ]] && docker image prune -f || :
             [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
+            echo $version >> synced
         done
         sudo rm -rf $save_name /$save_name kubernetes/ 
+        [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
     done < $CUR_DIR/$version_file
-
+    
     cd $CUR_DIR
-    rm -rf temp/* 
+    rm -rf temp/*
 }
 
 main
