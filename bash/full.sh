@@ -8,12 +8,6 @@ sync_class_list=(
     base
     )
 
-tag_list=(
-    full
-    kube
-    base
-    )
-
 # version
 full::sync(){
     local tag=$1-full
@@ -43,7 +37,7 @@ single::sync(){
             FROM zhangguanzhang/alpine
             COPY $file /
 EOF
-            docker build -t zhangguanzhang/$img_name:$1-$file .
+            sudo docker build -t zhangguanzhang/$img_name:$1-$file .
             docker push zhangguanzhang/$img_name:$1-$file
             echo zhangguanzhang/$img_name:$1-$file > $CUR_DIR/tag/$1-$file
             rm -f $file
@@ -53,7 +47,7 @@ EOF
 
 # version
 kube::sync(){
-    local tag=$1-kube
+    local tag=$1-kube local_kube_file=()
     files=(
         kube-apiserver
         kube-controller-manager
@@ -65,8 +59,13 @@ kube::sync(){
         kubeadm
         )
     [ "$( hub_tag_exist $tag )" == null ] && {
-        sudo tar -zxvf /$save_name  --strip-components=3  $( sed 's#^#kubernetes/server/bin/#' <(xargs -n1<<<"${files[@]}") )
-        tar zcvf $save_name "${files[@]}"
+        
+        sudo tar -zxvf /$save_name  --strip-components=3  kubernetes/server/bin/
+        for file in ${files[@]};do
+            [ -f $file ] && local_kube_file+=($file)
+        done
+        tar zcvf $save_name "${local_kube_file[@]}"
+        rm -f $(ls -1I $save_name)
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
         COPY $save_name /
@@ -74,7 +73,7 @@ EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
         echo zhangguanzhang/$img_name:$tag > $CUR_DIR/tag/$tag
-        rm -f $save_name "${files[@]}"
+        rm -f $save_name 
     } || :
 }
 
@@ -91,6 +90,7 @@ base::sync(){
     [ "$( hub_tag_exist $tag )" == null ] && {
         sudo tar -zxvf /$save_name  --strip-components=3  $( sed 's#^#kubernetes/server/bin/#' <(xargs -n1<<<"${files[@]}") )
         tar zcvf $save_name "${files[@]}"
+        rm -f ${files[@]}
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
         COPY $save_name /
@@ -98,7 +98,7 @@ EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
         echo zhangguanzhang/$img_name:$tag > $CUR_DIR/tag/$tag
-        rm -f $save_name "${files[@]}"
+        rm -f $save_name
     } || :
 }
 
@@ -122,7 +122,7 @@ main(){
     done < $CUR_DIR/$version_file
 
     cd $CUR_DIR
-    rm -rf temp/*
+    rm -rf temp/* 
 }
 
 main
