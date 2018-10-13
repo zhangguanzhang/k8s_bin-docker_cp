@@ -64,7 +64,7 @@ kube::sync(){
         for file in ${files[@]};do
             [ -f $file ] && local_kube_file+=($file)
         done
-        tar zcvf $save_name "${local_kube_file[@]}"
+        sudo tar zcvf $save_name "${local_kube_file[@]}"
         rm -f $(ls -1I $save_name)
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
@@ -89,7 +89,7 @@ base::sync(){
         )
     [ "$( hub_tag_exist $tag )" == null ] && {
         sudo tar -zxvf /$save_name  --strip-components=3  $( sed 's#^#kubernetes/server/bin/#' <(xargs -n1<<<"${files[@]}") )
-        tar zcvf $save_name "${files[@]}"
+        sudo tar zcvf $save_name "${files[@]}"
         rm -f ${files[@]}
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
@@ -108,6 +108,7 @@ main(){
 
     cd $CUR_DIR/temp
     while read version;do
+        grep -qP '\Q'"$version"'\E' $CUR_DIR/synced && continue
         printf -v version_url_download "$url_format" $version
         save_name=${version_url_download##*/}
         sudo wget $version_url_download -O /$save_name &>/dev/null
@@ -116,13 +117,15 @@ main(){
             $run::sync $version
             [[ $(df -h| awk  '$NF=="/"{print +$5}') -ge "$max_per" ]] && docker image prune -f || :
             [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
+            echo $version >> $CUR_DIR/synced
         done
         sudo rm -rf $save_name /$save_name kubernetes/ 
+        [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
     done < $CUR_DIR/$version_file
-
+    
     cd $CUR_DIR
-    rm -rf temp/* 
+    rm -rf temp/*
 }
 
 main
