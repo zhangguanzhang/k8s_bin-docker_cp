@@ -1,2 +1,2 @@
             FROM zhangguanzhang/alpine
-            COPY kube-apiserver /
+            COPY hyperkube /
