@@ -102,6 +102,9 @@ EOF
     } || :
 }
 
+stable_tag(){
+    curl -ks -XGET https://gcr.io/v2/${@#*/}/tags/list | jq -r .tags[] | grep -P 'v[\d.]+$' | sort -t '.' -n -k 2
+}
 
 main(){
     : ${save_name:=kubernetes-server-linux-amd64.tar.gz}
@@ -123,7 +126,7 @@ main(){
         sudo rm -rf $save_name /$save_name kubernetes/ 
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
-    done < $CUR_DIR/$version_file
+    done < <(stable_tag gcr.io/google_containers/kube-apiserver-amd64)
     
     cd $CUR_DIR
     rm -rf temp/*
