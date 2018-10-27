@@ -117,8 +117,9 @@ main(){
             $run::sync $version
             [[ $(df -h| awk  '$NF=="/"{print +$5}') -ge "$max_per" ]] && docker image prune -f || :
             [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
-            echo $version >> $CUR_DIR/synced
         done
+        echo $version >> $CUR_DIR/synced
+
         sudo rm -rf $save_name /$save_name kubernetes/ 
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
