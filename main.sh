@@ -5,7 +5,6 @@ export CUR_DIR version_file MY_REPO img_name max_per url_format
 readonly CUR_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 max_per=70
 shell_dir='bash'
-version_file=version_file
 MY_REPO=zhangguanzhang
 img_name=k8s_bin
 url_format='https://dl.k8s.io/%s/kubernetes-server-linux-amd64.tar.gz'
@@ -49,8 +48,7 @@ main(){
     sudo cp -r bash /
     git_init
     mkdir -p temp tag
-    sudo  rm -rf bash $version_file README.md ;yes|sudo  cp -r /bash .
-    wget https://raw.githubusercontent.com/zhangguanzhang/k8s_bin-docker_cp/master/$version_file -O $version_file
+    sudo  rm -rf bash  README.md ;yes|sudo  cp -r /bash .
     wget https://raw.githubusercontent.com/zhangguanzhang/k8s_bin-docker_cp/master/README.md
     ls -l;ls -l temp
 #     while true;do
