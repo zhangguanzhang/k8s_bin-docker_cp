@@ -9,7 +9,7 @@ MY_REPO=zhangguanzhang
 img_name=k8s_bin
 url_format='https://dl.k8s.io/%s/kubernetes-server-linux-amd64.tar.gz'
 
-curl -sv curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | head -n 10
+curl -sv curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags  | jq -r '.[].url | match("(?<=/)[^/]+$").string'
 
 git_init(){
     git config --global user.name "zhangguanzhang"
