@@ -1,5 +1,6 @@
 #!/bin/bash
-
+curl -sv https://api.github.com/repos/containernetworking/plugins/git/refs/tags 
+# | jq -r '.[].url | match("(?<=/)[^/]+$").string'
 # need to run,don't change the sort
 sync_class_list=(
     full
