@@ -54,7 +54,7 @@ main(){
 #             jq -r '.[].name' | grep -P 'v[\d.]+$' | sort -t '.' -n -k 2 &> $version_file
 #         [ "$(perl -nle 'END{print $.}'l $version_file)" -eq 10 ] && break
 #     done
-
+set -x 
     while read shell_file;do
         source $shell_file $(awk -F'/' '{print $2}'<<<$shell_file)
     done < <(find $shell_dir -type f -name '*.sh')
