@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# MINISHIFT_GITHUB_API_TOKEN=f62950fc041df6f8788a7d23157a39936a0af440
+
+
 [ -n "$DEBUG" ] && set -x
 export CUR_DIR version_file MY_REPO img_name max_per url_format
 

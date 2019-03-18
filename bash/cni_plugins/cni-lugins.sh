@@ -52,10 +52,11 @@ main(){
         grep -qP '\Q'"$tag"'\E' $sync_record_file && continue
         err=`curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$tag | jq .message`
         [ "$err" != 'null' ] && continue # Not Found
-        if [ "$(get_download_url $tag | awk 'END{print NR}') -ge 2 ];then
+        if [ "$(get_download_url $tag | awk 'END{print NR}')" -ge 2 ];then
             while read  url;do
                 wget $url
             done < <(get_download_url $tag)      
+
             for archfile in ${arch[@]};do
                 ls *$archfile* &>/dev/null && {
                     cni::sync $archfile $tag
@@ -63,10 +64,9 @@ main(){
                 [[ $(df -h| awk  '$NF=="/"{print +$5}') -ge "$max_per" ]] && docker image prune -f || :
                 [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
             done
-        echo $tag >> $sync_record_file
+            echo $tag >> $sync_record_file
 
-        rm -rf $CUR_DIR/temp/*$tag*
-
+            rm -rf $CUR_DIR/temp/*$tag*
         fi
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
