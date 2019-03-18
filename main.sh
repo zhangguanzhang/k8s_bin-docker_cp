@@ -6,10 +6,8 @@ readonly CUR_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 max_per=70
 shell_dir='bash'
 MY_REPO=zhangguanzhang
-img_name=k8s_bin
 url_format='https://dl.k8s.io/%s/kubernetes-server-linux-amd64.tar.gz'
 
-curl -sv curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags  | jq -r '.[].url | match("(?<=/)[^/]+$").string'
 
 git_init(){
     git config --global user.name "zhangguanzhang"
@@ -37,19 +35,14 @@ git_commit(){
      fi
 }
 
-# tag
-hub_tag_exist(){
-    curl -s https://hub.docker.com/v2/repositories/${MY_REPO}/${img_name}/tags/$1/ | jq -r .name
-}
-
 
 main(){
     [ -z "$start_time" ] && start_time=$(date +%s)
 
     sudo cp -r bash /
     git_init
-    mkdir -p temp tag
-    sudo  rm -rf bash  README.md ;yes|sudo  cp -r /bash .
+    mkdir -p temp sync
+    sudo  rm -rf bash  README.md ;yes|sudo  cp -r /bash .  # 确保master分支的README和脚步文件修改后会被此处逻辑带到develop分之下
     wget https://raw.githubusercontent.com/zhangguanzhang/k8s_bin-docker_cp/master/README.md
     ls -l;ls -l temp
 #     while true;do
@@ -59,7 +52,7 @@ main(){
 #     done
 
     while read shell_file;do
-        source $shell_file
+        source $shell_file $(awk -F'/' '{print $2}'<<<$shell_file)
     done < <(find $shell_dir -type f -name '*.sh')
     rm -rf temp
     git_commit

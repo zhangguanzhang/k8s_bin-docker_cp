@@ -1,6 +1,11 @@
 #!/bin/bash
-curl -sv https://api.github.com/repos/containernetworking/plugins/git/refs/tags 
-# | jq -r '.[].url | match("(?<=/)[^/]+$").string'
+sync_record_dir=$CUR_DIR/sync/{1}/   # 存放根目录的 ./bash/$own/的$own
+sync_record_tag_dir=${sync_record_dir}/tag/
+sync_record_file=${sync_record_dir}/synced
+img_name=k8s_bin
+
+mkdir -p $sync_record_tag_dir $sync_record_dir
+
 # need to run,don't change the sort
 sync_class_list=(
     full
@@ -8,6 +13,15 @@ sync_class_list=(
     kube
     base
     )
+
+
+
+# tag
+hub_tag_exist(){
+    curl -s https://hub.docker.com/v2/repositories/${MY_REPO}/${img_name}/tags/$1/ | jq -r .name
+}
+
+
 
 # version
 full::sync(){
@@ -20,7 +34,7 @@ full::sync(){
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
-        echo zhangguanzhang/$img_name:$1-full > $CUR_DIR/tag/$tag
+        echo zhangguanzhang/$img_name:$1-full > $sync_record_tag_dir/$tag
         rm -f $save_name
     } || :
 }
@@ -40,7 +54,7 @@ single::sync(){
 EOF
             sudo docker build -t zhangguanzhang/$img_name:$1-$file .
             docker push zhangguanzhang/$img_name:$1-$file
-            echo zhangguanzhang/$img_name:$1-$file > $CUR_DIR/tag/$1-$file
+            echo zhangguanzhang/$img_name:$1-$file > $sync_record_tag_dir/$1-$file
             rm -f $file
         } || :
     done
@@ -73,7 +87,7 @@ kube::sync(){
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
-        echo zhangguanzhang/$img_name:$tag > $CUR_DIR/tag/$tag
+        echo zhangguanzhang/$img_name:$tag > $sync_record_tag_dir/$tag
         rm -f $save_name 
     } || :
 }
@@ -98,7 +112,7 @@ base::sync(){
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
-        echo zhangguanzhang/$img_name:$tag > $CUR_DIR/tag/$tag
+        echo zhangguanzhang/$img_name:$tag > $sync_record_tag_dir/$tag
         rm -f $save_name
     } || :
 }
@@ -112,7 +126,7 @@ main(){
 
     cd $CUR_DIR/temp
     while read version;do
-        grep -qP '\Q'"$version"'\E' $CUR_DIR/synced && continue
+        grep -qP '\Q'"$version"'\E' $sync_record_file && continue
         printf -v version_url_download "$url_format" $version
         save_name=${version_url_download##*/}
         sudo wget $version_url_download -O /$save_name &>/dev/null
@@ -122,7 +136,7 @@ main(){
             [[ $(df -h| awk  '$NF=="/"{print +$5}') -ge "$max_per" ]] && docker image prune -f || :
             [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
         done
-        echo $version >> $CUR_DIR/synced
+        echo $version >> $sync_record_file
 
         sudo rm -rf $save_name /$save_name kubernetes/ 
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
