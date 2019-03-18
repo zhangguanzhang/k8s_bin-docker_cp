@@ -46,6 +46,7 @@ get_download_url(){
 }
 
 main(){
+    curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
     local url tag;
     cd $CUR_DIR/temp
     while read tag;do
