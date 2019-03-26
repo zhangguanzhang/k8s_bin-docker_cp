@@ -42,7 +42,14 @@ git_commit(){
 
 main(){
     [ -z "$start_time" ] && start_time=$(date +%s)
-
+curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
+curl -s https://api.github.com/rate_limit
+curl -s https://api.github.com/rate_limit
+curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
+a=`curl -s https://api.github.com/rate_limit | jq .rate.limit`
+sleep $[a/1000]
+curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
+sleep 
     sudo cp -r bash /
     git_init
     mkdir -p temp sync
