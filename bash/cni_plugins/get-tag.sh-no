@@ -1,0 +1,22 @@
+# return all the tags
+stable_tag(){
+    curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
+}
+
+# $1 tag
+get_download_url(){
+    curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$1 | jq -r .assets[].browser_download_url
+}
+
+main(){
+    while read tag;do
+        err=`curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$tag | jq .message`
+        grep -Pq 'Not' <<<"$err" && continue # Not Found
+        if [ "$(get_download_url $tag | awk 'END{print NR}')" -ge 2 ];then
+            echo $tag
+        fi
+
+    done < <(stable_tag)
+}
+
+main
