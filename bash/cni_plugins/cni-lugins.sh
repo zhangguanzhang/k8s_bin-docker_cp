@@ -1,5 +1,8 @@
 #!/bin/bash
-sync_record_dir=$CUR_DIR/sync/${1}/   # 存放根目录的 ./bash/$own/
+
+readonly sh_CUR_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
+
+sync_record_dir=$CUR_DIR/sync/${1}/   # 存放分支develop的根目录的 ./sync/$own/
 sync_record_tag_dir=${sync_record_dir}/tag/
 sync_record_file=${sync_record_dir}/synced
 img_name=cni-plugins
@@ -46,14 +49,10 @@ get_download_url(){
 }
 
 main(){
-    curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
     local url tag;
     cd $CUR_DIR/temp
     while read tag;do
         grep -qP '\Q'"$tag"'\E' $sync_record_file && continue
-        err=`curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$tag | jq .message`
-        [ "$err" =~ 'Not' ] && continue # Not Found
-        if [ "$(get_download_url $tag | awk 'END{print NR}')" -ge 2 ];then
             while read  url;do
                 wget $url
             done < <(get_download_url $tag)      
@@ -68,10 +67,9 @@ main(){
             echo $tag >> $sync_record_file
 
             rm -rf $CUR_DIR/temp/*$tag*
-        fi
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
-    done < <(stable_tag)
+    done < <(grep -Pv '^\s*$|^\s*#' $sh_CUR_DIR/tags )
     
     cd $CUR_DIR
     rm -rf temp/*

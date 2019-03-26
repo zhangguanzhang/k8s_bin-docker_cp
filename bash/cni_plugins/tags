@@ -1,0 +1,10 @@
+#curl -s https://api.github.com/repos/containernetworking/plugins/git/refs/tags | jq -r '.[].url | match("(?<=/)[^/]+$").string'
+v0.6.0-rc1
+v0.6.0-rc2
+v0.6.0
+v0.7.0-rc1
+v0.7.0-rc2
+v0.7.0
+v0.7.1
+v0.7.4
+v0.7.5
