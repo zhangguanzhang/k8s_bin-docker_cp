@@ -42,7 +42,7 @@ stable_tag(){
 
 # $1 tag
 get_download_url(){
-    curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$1 | jq .assets[].browser_download_url
+    curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$1 | jq -r .assets[].browser_download_url
 }
 
 main(){
@@ -52,7 +52,7 @@ main(){
     while read tag;do
         grep -qP '\Q'"$tag"'\E' $sync_record_file && continue
         err=`curl -s https://api.github.com/repos/containernetworking/plugins/releases/tags/$tag | jq .message`
-        [ "$err" != 'null' ] && continue # Not Found
+        [ "$err" =~ 'Not' ] && continue # Not Found
         if [ "$(get_download_url $tag | awk 'END{print NR}')" -ge 2 ];then
             while read  url;do
                 wget $url
