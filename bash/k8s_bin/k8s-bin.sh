@@ -1,5 +1,5 @@
 #!/bin/bash
-sync_record_dir=$CUR_DIR/sync/{1}/   # 存放根目录的 ./bash/$own/的$own
+sync_record_dir=$CUR_DIR/sync/${1}/   # 存放根目录的 ./bash/$own/的$own
 sync_record_tag_dir=${sync_record_dir}/tag/
 sync_record_file=${sync_record_dir}/synced
 img_name=k8s_bin
