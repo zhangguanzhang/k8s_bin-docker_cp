@@ -31,7 +31,7 @@ cni::sync(){
         [ -n "$DEBUG" ] && ls -l
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
-        COPY cni-plugins-$1-$2.* /
+        COPY cni-plugins*$1-$2.* /
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
