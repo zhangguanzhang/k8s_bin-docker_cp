@@ -28,6 +28,7 @@ hub_tag_exist(){
 cni::sync(){
     local tag=$1-$2
     [ "$( hub_tag_exist $tag )" == null ] && {
+        [ -n "$DEBUG" ] && ls -l
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
         COPY cni-plugins-$1-$2.* /
