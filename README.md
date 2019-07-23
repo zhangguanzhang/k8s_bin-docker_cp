@@ -27,3 +27,20 @@ type为下面几种
  docker run --rm -d --name temp zhangguanzhang/k8s_bin:v1.12.1-kubelet sleep 12
  docker cp temp:/kubelet .
  ```
+
+docker.elastic.co镜像
+```
+curl -s 'https://www.docker.elastic.co/#' | perl -lne 'if(/docker pull/){s/<\/?strong>//g;/docker pull \K[^<]+/;print $&}' | grep -w 你镜像名
+# 重命名规则
+es_pull(){
+    docker pull $@
+    read null ns img < <(tr / ' ' <<<$@)
+    newName=zhangguanzhang/$ns-$img
+    sh_name=zhangguanzhang/$(tr / .<<<$@) # 镜像名的/换成.然后前面zhangguanzhang/
+    docker tag $@  $newName
+    docker tag $@  $sh_name
+    docker push $newName
+    docker push $sh_name
+}
+zhangguanzhang/
+```

@@ -18,8 +18,11 @@ es_pull(){
     docker pull $@
     read null ns img < <(tr / ' ' <<<$@)
     newName=$MY_REPO/$ns-$img
+    sh_name=$MY_REPO/$(tr / .<<<$@)
     docker tag $@  $newName
+    docker tag $@  $sh_name
     docker push $newName
+    docker push $sh_name
 }
 
 
