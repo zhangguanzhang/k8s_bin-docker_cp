@@ -9,7 +9,7 @@ export CUR_DIR version_file MY_REPO img_name max_per url_format
 readonly CUR_DIR=$(cd $(dirname ${BASH_SOURCE:-$0}); pwd)
 max_per=70
 shell_dir='bash'
-MY_REPO=zhangguanzhang
+export MY_REPO=zhangguanzhang
 url_format='https://dl.k8s.io/%s/kubernetes-server-linux-amd64.tar.gz'
 
 
