@@ -9,22 +9,33 @@ type为下面几种
  * base: 最基础的k8s二进制文件,包含`kube-apiserver,kube-controller-manager,kube-proxy,kube-scheduler,kubectl,kubelet`
  
  例如下载1.12.1的官方包
+ ```
+ VERSION=v1.12.1
+ TYPE=full
+ ```
+
+除了es的镜像，都可以用阿里的镜像仓库地址下载，`docker pull registry.aliyuncs.com/zhangguanzhang/k8s_bin:$VERSION-$TYPE`
+
  ```bash
- docker pull zhangguanzhang/k8s_bin:v1.12.1-full
- docker run --rm -d --name temp zhangguanzhang/k8s_bin:v1.12.1-full sleep 12
+ docker pull zhangguanzhang/k8s_bin:$VERSION-$TYPE
+ docker run --rm -d --name temp zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
  docker cp temp:/kubernetes-server-linux-amd64.tar.gz .
  ```
  例如下载1.12.1的基础二进制文件
+ VERSION=v1.12.1
+ TYPE=base
  ```bash
- docker pull zhangguanzhang/k8s_bin:v1.12.1-base
- docker run --rm -d --name temp zhangguanzhang/k8s_bin:v1.12.1-base sleep 12
+ docker pull zhangguanzhang/k8s_bin:$VERSION-$TYPE
+ docker run --rm -d --name temp zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
  docker cp temp:/kubernetes-server-linux-amd64.tar.gz .
  ```
  
  例如下载1.12.1的kubelet
  ```bash
- docker pull zhangguanzhang/k8s_bin:v1.12.1-kubelet
- docker run --rm -d --name temp zhangguanzhang/k8s_bin:v1.12.1-kubelet sleep 12
+ VERSION=v1.12.1
+ TYPE=kubelet
+ docker pull zhangguanzhang/k8s_bin:$VERSION-$TYPE
+ docker run --rm -d --name temp zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
  docker cp temp:/kubelet .
  ```
 

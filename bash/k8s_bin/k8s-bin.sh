@@ -18,6 +18,10 @@ sync_class_list=(
 
 # tag
 hub_tag_exist(){
+    [ -n "$bin_force" ] && {
+        echo null
+        return 0
+    }
     curl -s https://hub.docker.com/v2/repositories/${MY_REPO}/${img_name}/tags/$1/ | jq -r .name
 }
 
@@ -41,7 +45,7 @@ EOF
 
 # version
 single::sync(){
-    du -shx *
+    #du -shx *
     files=(
         $(sudo tar ztf /$save_name | grep -Po 'kubernetes/server/bin/\K[^.]+$')
     )
