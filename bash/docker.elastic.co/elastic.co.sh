@@ -13,7 +13,7 @@ hub_tag_exist(){
 
 es_pull(){
     docker pull $@
-    newName=$MY_REPO/$MY_REPO/$(tr / .<<<$@)
+    newName=$MY_REPO/$(tr / .<<<$@)
     docker tag $@  $newName
     docker push $newName
 }
