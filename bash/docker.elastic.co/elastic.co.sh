@@ -3,9 +3,6 @@ sync_record_dir=$CUR_DIR/sync/${1}/   # 存放根目录的 ./bash/$own/的$own
 sync_record_tag_dir=${sync_record_dir}/tag/
 sync_record_file=${sync_record_dir}/synced
 
-
-domain=docker.elastic.co
-
 mkdir -p $sync_record_tag_dir $sync_record_dir
 
 
@@ -16,13 +13,9 @@ hub_tag_exist(){
 
 es_pull(){
     docker pull $@
-    read null ns img < <(tr / ' ' <<<$@)
-    newName=$MY_REPO/$ns-$img
-    sh_name=$MY_REPO/$(tr / .<<<$@)
+    newName=$MY_REPO/$MY_REPO/$(tr / .<<<$@)
     docker tag $@  $newName
-    docker tag $@  $sh_name
     docker push $newName
-    docker push $sh_name
 }
 
 
@@ -46,3 +39,4 @@ main(){
 }
 
 main
+
