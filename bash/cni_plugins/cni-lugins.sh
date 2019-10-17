@@ -9,15 +9,6 @@ img_name=cni-plugins
 
 mkdir -p $sync_record_tag_dir
 
-arch=(
-    amd64
-    arm
-    arm64
-    ppc64le
-    s390x
-)
-
-
 
 # img_tag
 hub_tag_exist(){
@@ -26,12 +17,12 @@ hub_tag_exist(){
 
 # $arch $version
 cni::sync(){
-    local tag=$1-$2
+    local tag=$1
     [ "$( hub_tag_exist $tag )" == null ] && {
         [ -n "$DEBUG" ] && ls -l
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
-        COPY cni-plugins*$1-$2.* /
+        COPY cni-plugins-$tag.* /
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
         docker push zhangguanzhang/$img_name:$tag
@@ -50,24 +41,24 @@ get_download_url(){
 }
 
 main(){
-    local url tag;
+    local url version;
     cd $CUR_DIR/temp
-    while read tag;do
+    while read version;do
+
         grep -qP '\Q'"$tag"'\E' $sync_record_file && continue
             while read  url;do
                 wget $url
-            done < <(get_download_url $tag)      
+            done < <(get_download_url $version)      
 
-            for archfile in ${arch[@]};do
-                ls *$archfile* &>/dev/null && {
-                    cni::sync $archfile $tag
-                } || continue
+            while read hub_tag;do
+                cni::sync $hub_tag 
                 [[ $(df -h| awk  '$NF=="/"{print +$5}') -ge "$max_per" ]] && docker image prune -f || :
                 [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
-            done
-            echo $tag >> $sync_record_file
+            done < <(ls *$version* |sed "s@cni-plugins-@@;s@\(-${version}\).*@\1@" | sort -u )
 
-            rm -rf $CUR_DIR/temp/*$tag*
+            echo $version >> $sync_record_file
+
+            rm -rf $CUR_DIR/temp/*$version*
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
     done < <(grep -Pv '^\s*$|^\s*#' $sh_CUR_DIR/tags )
