@@ -32,7 +32,7 @@ main(){
 
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
-    done < <( curl -s 'https://www.docker.elastic.co/#' | perl -lne 'if(/docker pull/){s/<\/?strong>//g;/docker pull \K[^<]+/;print $&}')
+    done < <( curl -s 'https://www.docker.elastic.co/#' | perl -lne 'if(/docker pull/){s/<\/?strong>//g;/docker pull \K[^<]+/;print $&}' | sort -u )
     
     cd $CUR_DIR
     rm -rf temp/*
