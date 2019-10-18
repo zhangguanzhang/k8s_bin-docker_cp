@@ -18,7 +18,8 @@ hub_tag_exist(){
 # $arch $version
 cni::sync(){
     local tag=$1
-    [ "$( hub_tag_exist $tag )" == null ] && {
+#    [ "$( hub_tag_exist $tag )" == null ] && {
+     [ ! -f "$sync_record_tag_dir/$tag" ] && {
         [ -n "$DEBUG" ] && ls -l
         cat>Dockerfile<<-EOF
         FROM zhangguanzhang/alpine
