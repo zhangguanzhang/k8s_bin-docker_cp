@@ -45,7 +45,7 @@ main(){
     cd $CUR_DIR/temp
     while read version;do
 
-        grep -qP '\Q'"$tag"'\E' $sync_record_file && continue
+        grep -qP '\Q'"$version"'\E' $sync_record_file && continue
             while read  url;do
                 wget $url
             done < <(get_download_url $version)      
