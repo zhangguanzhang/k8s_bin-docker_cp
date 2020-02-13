@@ -41,7 +41,7 @@ EOF
 
 # version
 single::sync(){
-    du -shx *
+    #du -shx *
     files=(
         $(sudo tar ztf /$save_name | grep -Po 'kubernetes/server/bin/\K[^.]+$')
     )
