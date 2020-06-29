@@ -14,6 +14,8 @@ type为下面几种
  TYPE=full
  ```
 
+除了es的镜像，都可以用阿里的镜像仓库地址下载，`docker pull registry.aliyuncs.com/zhangguanzhang/k8s_bin:$VERSION-$TYPE`
+
  ```bash
  docker pull zhangguanzhang/k8s_bin:$VERSION-$TYPE
  docker run --rm -d --name temp zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
