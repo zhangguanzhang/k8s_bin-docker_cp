@@ -37,7 +37,9 @@ full::sync(){
         COPY $save_name /
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
+        docker tag zhangguanzhang/$img_name:$tag registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         docker push zhangguanzhang/$img_name:$tag
+        docker push registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         echo zhangguanzhang/$img_name:$1-full > $sync_record_tag_dir/$tag
         rm -f $save_name
     } || :
@@ -57,7 +59,9 @@ single::sync(){
             COPY $file /
 EOF
             sudo docker build -t zhangguanzhang/$img_name:$1-$file .
+            docker tag zhangguanzhang/$img_name:$1-$file registry.aliyuncs.com/zhangguanzhang/$img_name:$1-$file
             docker push zhangguanzhang/$img_name:$1-$file
+            docker push registry.aliyuncs.com/zhangguanzhang/$img_name:$1-$file
             echo zhangguanzhang/$img_name:$1-$file > $sync_record_tag_dir/$1-$file
             rm -f $file
         } || :
@@ -90,7 +94,9 @@ kube::sync(){
         COPY $save_name /
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
+        docker tag zhangguanzhang/$img_name:$tag registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         docker push zhangguanzhang/$img_name:$tag
+        docker push registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         echo zhangguanzhang/$img_name:$tag > $sync_record_tag_dir/$tag
         rm -f $save_name 
     } || :
@@ -115,7 +121,9 @@ base::sync(){
         COPY $save_name /
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
+        docker tag zhangguanzhang/$img_name:$tag registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         docker push zhangguanzhang/$img_name:$tag
+        docker push registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         echo zhangguanzhang/$img_name:$tag > $sync_record_tag_dir/$tag
         rm -f $save_name
     } || :

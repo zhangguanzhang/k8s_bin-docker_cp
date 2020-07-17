@@ -26,7 +26,9 @@ cni::sync(){
         COPY cni-plugins-$tag.* /
 EOF
         docker build -t zhangguanzhang/$img_name:$tag .
+        docker tag zhangguanzhang/$img_name:$tag registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         docker push zhangguanzhang/$img_name:$tag
+        docker push registry.aliyuncs.com/zhangguanzhang/$img_name:$tag
         echo zhangguanzhang/$img_name:$tag > $sync_record_tag_dir/$tag
     } || :
 }
