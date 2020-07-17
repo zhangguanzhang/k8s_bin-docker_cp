@@ -11,9 +11,9 @@ max_per=70
 shell_dir='bash'
 export MY_REPO=zhangguanzhang
 url_format='https://dl.k8s.io/%s/kubernetes-server-linux-amd64.tar.gz'
-[ -n "$ALI_DOCKER_PASS" ] && {
-    docker login -u zhangguanzhang@qq.com registry.aliyuncs.com -p ${ALI_DOCKER_PASS}
-}
+#[ -n "$ALI_DOCKER_PASS" ] && {
+#    docker login -u zhangguanzhang@qq.com registry.aliyuncs.com -p ${ALI_DOCKER_PASS}
+#}
 
 git_init(){
     git config --global user.name "zhangguanzhang"

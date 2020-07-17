@@ -15,8 +15,10 @@ script:
 - bash main.sh
 before_install:
 - export start_time=$(date +%s)
-- openssl aes-256-cbc -K $encrypted_adb29550dbbe_key -iv $encrypted_adb29550dbbe_iv
-  -in .travis/conf.tar.gz.enc -out ~/conf.tar.gz -d
+#- openssl aes-256-cbc -K $encrypted_adb29550dbbe_key -iv $encrypted_adb29550dbbe_iv
+#  -in .travis/conf.tar.gz.enc -out ~/conf.tar.gz -d
+- openssl aes-256-cbc -K $encrypted_25bed44c95b0_key -iv $encrypted_25bed44c95b0_iv
+  -in .travis/conf.tar.gz.enc.new -out ~/conf.tar.gz -d
 - mkdir -p ~/.docker
 - mkdir -p ~/.ssh
 - tar zxf ~/conf.tar.gz -C ~
