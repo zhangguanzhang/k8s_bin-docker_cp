@@ -130,7 +130,8 @@ EOF
 }
 
 stable_tag(){
-    curl -ks -XGET https://gcr.io/v2/${@#*/}/tags/list | jq -r .tags[] | grep -P 'v[\d.]+$' | sort -t '.' -n -k 2
+    #curl -ks -XGET https://gcr.io/v2/${@#*/}/tags/list | jq -r .tags[] | grep -P 'v[\d.]+$' | sort -t '.' -n -k 2
+    curl -ks -XGET https://k8s.gcr.io/v2/kube-apiserver-amd64/tags/list | jq -r .tags[] | grep -P 'v[\d.]+$' | sort -t '.' -n -k 2
 }
 
 main(){
@@ -153,7 +154,7 @@ main(){
         sudo rm -rf $save_name /$save_name kubernetes/ 
         [ $(( (`date +%s` - start_time)/60 )) -gt 47 ] && git_commit
 
-    done < <(stable_tag gcr.io/google_containers/kube-apiserver-amd64)
+    done < <(stable_tag ) # gcr.io/google_containers/kube-apiserver-amd64
     
     cd $CUR_DIR
     rm -rf temp/*
