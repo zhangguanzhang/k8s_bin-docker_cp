@@ -1,5 +1,5 @@
 # k8s_bin
-此仓库是`travis-ci`同步k8s相关的二进制文件(缺省架构为amd64)到dockerhub上的`zhangguanzhang/k8s_bin`镜像
+此仓库是`travis-ci`同步k8s相关的二进制文件(缺省架构为amd64)到dockerhub上的`zhangguanzhang/k8s_bin`镜像和阿里云仓库`registry.aliyuncs.com/zhangguanzhang/k8s_bin`
 tag规则为`$version-$type`
 
 type为下面几种
@@ -25,8 +25,8 @@ type为下面几种
  VERSION=v1.12.1
  TYPE=base
  ```bash
- docker pull zhangguanzhang/k8s_bin:$VERSION-$TYPE
- docker run --rm -d --name temp zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
+ docker pull registry.aliyuncs.com/zhangguanzhang/k8s_bin:$VERSION-$TYPE
+ docker run --rm -d --name temp registry.aliyuncs.com/zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
  docker cp temp:/kubernetes-server-linux-amd64.tar.gz .
  ```
  
@@ -34,8 +34,8 @@ type为下面几种
  ```bash
  VERSION=v1.12.1
  TYPE=kubelet
- docker pull zhangguanzhang/k8s_bin:$VERSION-$TYPE
- docker run --rm -d --name temp zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
+ docker pull registry.aliyuncs.com/zhangguanzhang/k8s_bin:$VERSION-$TYPE
+ docker run --rm -d --name temp registry.aliyuncs.com/zhangguanzhang/k8s_bin:$VERSION-$TYPE sleep 12
  docker cp temp:/kubelet .
  ```
 
